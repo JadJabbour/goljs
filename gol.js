@@ -85,22 +85,29 @@ gol.numberOfLiveNeighbors = function (_x, _y){
 gol.nextGeneration = function(){
 	gol.generations.push(gol.field);
 	var liveNeighbors = 0;
+	var switches = 0;
 	for(var i = 0 ; i < gol.field.length ; i++){
 		for(var j = 0 ; j < gol.field[i].length ; j++){
 			liveNeighbors = gol.numberOfLiveNeighbors(i, j);
 			if((gol.field[i][j] === 0) && (liveNeighbors === 3)){
 				gol.switchCellState(i, j);
+				switches++;
 			}
 			else{
 				if((gol.field[i][j] === 1) && (liveNeighbors < 2 )){
 					gol.switchCellState(i, j);
+					switches++;
 				}
 
 				if((gol.field[i][j] === 1) && (liveNeighbors > 3)){
 					gol.switchCellState(i, j);
+					switches++;
 				}
 			}
 		}
+	}
+	if(switches == 0){
+		gol.pause();
 	}
 	gol.printGeneration();
 	gol.drawGeneration();
