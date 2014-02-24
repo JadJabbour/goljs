@@ -64,6 +64,8 @@ gol.setT0 = function(a){
 //gets live neighbors
 gol.numberOfLiveNeighbors = function (_x, _y){
 	var numOfNeighbors = 0;
+	var genID = gol.generations.length - 1;
+	var studyField = gol.generations[genID];
 	var x = 0;
 	var y = 0;
 
@@ -74,7 +76,7 @@ gol.numberOfLiveNeighbors = function (_x, _y){
 			}
 			x = _x + i;
 			y = _y + j;
-			(x > -1 && x < gol.field.length) && (y > -1 && y < gol.field[x].length) ? numOfNeighbors += gol.field[x][y] : numOfNeighbors += 0;
+			(x > -1 && x < studyField.length) && (y > -1 && y < studyField[x].length) ? numOfNeighbors += studyField[x][y] : numOfNeighbors += 0;
 			x = 0;
 			y = 0;
 		}
@@ -83,23 +85,25 @@ gol.numberOfLiveNeighbors = function (_x, _y){
 };
 
 gol.nextGeneration = function(){
-	gol.generations.push(gol.field);
+	gol.generations.push(gol.copyField());
+	var genID = gol.generations.length - 1;
+	var studyField = gol.generations[genID];
 	var liveNeighbors = 0;
 	var switches = 0;
-	for(var i = 0 ; i < gol.field.length ; i++){
-		for(var j = 0 ; j < gol.field[i].length ; j++){
+	for(var i = 0 ; i < studyField.length ; i++){
+		for(var j = 0 ; j < studyField[i].length ; j++){
 			liveNeighbors = gol.numberOfLiveNeighbors(i, j);
-			if((gol.field[i][j] === 0) && (liveNeighbors === 3)){
+			if((studyField[i][j] === 0) && (liveNeighbors === 3)){
 				gol.switchCellState(i, j);
 				switches++;
 			}
 			else{
-				if((gol.field[i][j] === 1) && (liveNeighbors < 2 )){
+				if((studyField[i][j] === 1) && (liveNeighbors < 2 )){
 					gol.switchCellState(i, j);
 					switches++;
 				}
 
-				if((gol.field[i][j] === 1) && (liveNeighbors > 3)){
+				if((studyField[i][j] === 1) && (liveNeighbors > 3)){
 					gol.switchCellState(i, j);
 					switches++;
 				}
@@ -152,4 +156,20 @@ gol.launchTime = function(){
 
 gol.pause = function(){
 	clearInterval(gol.ticker);
+};
+
+gol.copyField = function(){
+	var rows = gol.field.length;
+	var cols = gol.field[0].length;
+	var temp = new Array(cols);
+	for (var i = 0; i < cols; i++) {
+		temp[i] = new Array(rows);
+	}
+
+	for(var i = 0 ; i < gol.field.length ; i++){
+		for(var j = 0 ; j < gol.field[i].length ; j++){
+			temp[i][j] = gol.field[i][j] == 0 ? 0 : 1;
+		}
+	}
+	return temp;
 };
