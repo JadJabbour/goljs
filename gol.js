@@ -107,7 +107,7 @@ gol.nextGeneration = function(){
 					gol.switchCellState(i, j);
 					switches++;
 				}
-			}
+			}		
 		}
 	}
 	if(switches == 0){
